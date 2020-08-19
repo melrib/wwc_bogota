@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WWC Bogota</title>
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
+      type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
+      type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
+      type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"
+      type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css"
+      href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+  </head>
+
+  <body>
+    <div style="width: 640px; height: 480px" id="mapContainer"></div>
+    <script>
+      // Initialize the platform object:
+      var platform = new H.service.Platform({
+        apikey: "YOUR_API_Key"
+      });
+
+      // Obtain the default map types from the platform object
+      var defaultLayers = platform.createDefaultLayers();
+
+      // Instantiate (and display) a map object:
+      var map = new H.Map(
+        document.getElementById('mapContainer'),
+        defaultLayers.vector.normal.map,
+        {
+          zoom: 10,
+          center: { lng: -46.6, lat: -23.56 }
+        });
+
+      // Enable the event system on the map instance:
+      var mapEvents = new H.mapevents.MapEvents(map);
+
+      // Add event listeners:
+      map.addEventListener('tap', function(evt) {
+          // Log 'tap' and 'mouse' events:
+          console.log(evt.type, evt.currentPointer.type);
+      });
+
+      // Instantiate the default behavior, providing the mapEvents object:
+      var behavior = new H.mapevents.Behavior(mapEvents);
+
+      // Create the default UI:
+      var ui = H.ui.UI.createDefault(map, defaultLayers, 'es-ES');
+
+        getBrowserPosition();
+
+        function getBrowserPosition(){
+
+            if(navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        // console.log(position.coords);
+                        let browserPosition = {lat:position.coords.latitude, lng:position.coords.longitude};
+                        let marker = new H.map.Marker(browserPosition);
+                        map.addObject(marker);
+                    });
+                } else {
+                    alert("Geolocation is not supported by this browser!");
+            }
+        };
+
+      // Get an instance of the geocoding service:
+      var geocoder = platform.getSearchService();
+    
+      function geocodeAndSearch(){
+
+          let geocoderParams = {
+              q: 'restaurant',
+              at : '-23.63,-46.68'
+          }
+
+          function onResult(result){
+            console.log(result);
+          }
+
+          geocoder.browse(geocoderParams,onResult,alert);
+
+      }
+
+      geocodeAndSearch();
+    
+      // Create the parameters for the routing request:
+      var routingParameters = {
+        routingMode: 'fast',
+        transportMode: 'car',
+        // The start point of the route:
+        origin: '-23.631769,-46.680649',
+        // The end point of the route:
+        destination: '-23.60284,-46.69323',
+        // Include the route shape in the response
+        return: 'polyline'
+      };
+        // Define a callback function to process the routing response:
+        var onResult = function(result) {
+          console.log(result);
+          if (result.routes.length) {
+            // result.routes.forEach(route =>{
+              result.routes[0].sections.forEach((section) => {
+            // Create a linestring to use as a point source for the route line
+           let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline);
+    
+           // Create a polyline to display the route:
+           let routeLine = new H.map.Polyline(linestring, {
+             style: { strokeColor: '#034F84', lineWidth: 3 }
+           });
+    
+           // Create a marker for the start point:
+           let startMarker = new H.map.Marker(section.departure.place.location);
+    
+           // Create a marker for the end point:
+           let endMarker = new H.map.Marker(section.arrival.place.location);
+    
+     
+           // Add the route polyline and the two markers to the map:
+           map.addObjects([routeLine, startMarker, endMarker]);
+    
+           // Set the map's viewport to make the whole route visible:
+           map.getViewModel().setLookAtData({bounds: routeLine.getBoundingBox()});
+           
+        });
+        }
+      };
+          // Get an instance of the routing service version 8:
+          var router = platform.getRoutingService(null, 8);
+
+          // Call calculateRoute() with the routing parameters,
+          // the callback and an error callback function (called if a
+          // communication error occurs):
+          router.calculateRoute(routingParameters, onResult,
+            function(error) {
+              alert(error.message);
+      });
+
+    </script>
+  </body>
+</html>
