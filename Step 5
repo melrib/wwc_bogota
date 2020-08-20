@@ -1,0 +1,26 @@
+Step 5 - Geocoder
+https://developer.here.com/documentation/geocoding-search-api/api-reference-swagger.html
+
+This endpoint processes text address input, matching it to a map data index and returning a set of addresses with their geographic coordinates.
+Let's use our coordinates and ask for 'restaurant' nearby on parameters q and at:
+
+// Get an instance of the geocoding service:
+      var geocoder = platform.getSearchService();
+    
+      function geocodeAndSearch(){
+
+          let geocoderParams = {
+              q: 'restaurant',
+              at : '-23.63,-46.68'
+          }
+
+          function onResult(result){
+            console.log(result);
+          }
+
+          geocoder.browse(geocoderParams,onResult,alert);
+
+      }
+
+      geocodeAndSearch();
+
