@@ -1,0 +1,67 @@
+Step 6 - Routing
+https://developer.here.com/documentation/maps/3.1.17.0/dev_guide/topics/routing.html
+
+Route planning and navigation are the most commonly used applications of location-based services. 
+Let's find the way to get to the resturant?
+First of all you may define the parameters: Routing Mode, Transport and origin/destination points based on the coordinates you found in your browser and in the restaurant list.
+****// Create the parameters for the routing request:
+You may define also if you want the route to be displayed n the map ad how you want it to be done.
+***// Define a callback function to process the routing response:
+In ths case we wanted it to be an AQUA (#50c7c7) polyline
+***// Create a polyline to display the route:
+
+// Create the parameters for the routing request:
+      var routingParameters = {
+        routingMode: 'fast',
+        transportMode: 'car',
+        // The start point of the route:
+        origin: '-23.631769,-46.680649',
+        // The end point of the route:
+        destination: '-23.60284,-46.69323',
+        // Include the route shape in the response
+        return: 'polyline'
+      };
+        // Define a callback function to process the routing response:
+        var onResult = function(result) {
+          console.log(result);
+          if (result.routes.length) {
+            // result.routes.forEach(route =>{y
+              result.routes[0].sections.forEach((section) => {
+            // Create a linestring to use as a point source for the route line
+           let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline);
+    
+           // Create a polyline to display the route:
+           let routeLine = new H.map.Polyline(linestring, {
+             style: { strokeColor: '#50c7c7', lineWidth: 4 }
+           });
+    
+           // Create a marker for the start point:
+           let startMarker = new H.map.Marker(section.departure.place.location);
+    
+           // Create a marker for the end point:
+           let endMarker = new H.map.Marker(section.arrival.place.location);
+    
+     
+           // Add the route polyline and the two markers to the map:
+           map.addObjects([routeLine, startMarker, endMarker]);
+    
+           // Set the map's viewport to make the whole route visible:
+           map.getViewModel().setLookAtData({bounds: routeLine.getBoundingBox()});
+           
+        });
+        }
+      };
+          // Get an instance of the routing service version 8:
+          var router = platform.getRoutingService(null, 8);
+
+          // Call calculateRoute() with the routing parameters,
+          // the callback and an error callback function (called if a
+          // communication error occurs):
+          router.calculateRoute(routingParameters, onResult,
+            function(error) {
+              alert(error.message);
+      });
+
+    </script>
+  </body>
+</html>
