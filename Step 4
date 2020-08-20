@@ -5,20 +5,25 @@ https://developer.here.com/documentation/geocoding-search-api/api-reference-swag
 It is an interface for users to retrieve location updates and to display their current location on a map
 This tim it is not necessary to connect to a library, so just Load the code:
 
-//Get Browser Position and show it with a marker
-getBrowserPosition();
+<body>
+  ...
+    <script>
+    ...
+        //Get Browser Position and show it with a marker
+        getBrowserPosition();
 
-        function getBrowserPosition(){
+                function getBrowserPosition(){
 
-            if(navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(position => {
-                        // console.log(position.coords);
-                        let browserPosition = {lat:position.coords.latitude, lng:position.coords.longitude};
-                        let marker = new H.map.Marker(browserPosition);
-                        map.addObject(marker);
-                    });
-                } else {
-                    alert("Geolocation is not supported by this browser!");
-            }
-        };
-
+                    if(navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(position => {
+                                // console.log(position.coords);
+                                let browserPosition = {lat:position.coords.latitude, lng:position.coords.longitude};
+                                let marker = new H.map.Marker(browserPosition);
+                                map.addObject(marker);
+                            });
+                        } else {
+                            alert("Geolocation is not supported by this browser!");
+                    }
+                };
+ </script>
+</body>
