@@ -1,0 +1,79 @@
+Step 3
+MapEvents+Controls_UI
+https://developer.here.com/documentation/maps/3.1.14.0/dev_guide/topics/map-events.html
+
+In the last Step we loaded a static map, the viewer cannot drag it to see a different area, so let's implement map interaction using Map Events. 
+First connect with its library:
+
+<!DOCTYPE html>
+<html>
+  <head>
+    ...
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
+      type="text/javascript" charset="utf-8"></script>
+  </head>
+  
+  <body>
+  ...
+    <script>
+    ...
+      // Enable the event system on the map instance:
+      var mapEvents = new H.mapevents.MapEvents(map);
+
+      // Add event listeners:
+      map.addEventListener('tap', function(evt) {
+          // Log 'tap' and 'mouse' events:
+          console.log(evt.type, evt.currentPointer.type);
+      });
+
+      // Instantiate the default behavior, providing the mapEvents object:
+      var behavior = new H.mapevents.Behavior(mapEvents);
+    </script>
+ </body>
+ 
+ Now t is possible to drag the map, zoom in and out with mouse scroll button.
+ Let's add some map controls (UI) such as the Zoom button, Satellite/Map View and Scale Bar.
+ https://developer.here.com/documentation/maps/3.1.14.0/dev_guide/topics/map-controls-ui.html
+ 
+ Connecting to its library:
+<!DOCTYPE html>
+<html>
+  <head>
+    ...
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"
+      type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css"
+      href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+  </head>
+  
+  Loading it:
+  <body>
+  ...
+    <script>
+    ...
+    // Create the default UI:
+      var ui = H.ui.UI.createDefault(map, defaultLayers);
+    </script>
+ </body>
+
+You may choose the language you want it to be displayed:
+
+The UI module comes with localizations for the following languages:
+
+en-US – English (United States)
+de-DE – German
+es-ES – Spanish
+fi-FI – Finnish
+fr-FR – French
+it-IT – Italian
+nl-NL – Dutch
+pl-PL – Polish
+pt-BR – Portuguese (Brazil)
+pt-PT – Portuguese (Portugal)
+ru-RU – Russian
+tr-TR – Turkish
+zh-CN – Chinese (China)
+
+You just need to use it as following:
+// Create the default UI:
+    var ui = H.ui.UI.createDefault(map, defaultLayers, 'pt-BR');
