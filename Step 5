@@ -3,25 +3,31 @@ https://developer.here.com/documentation/geocoding-search-api/api-reference-swag
 
 This endpoint processes text address input, matching it to a map data index and returning a set of addresses with their geographic coordinates.
 Let's use our coordinates and ask for 'restaurant' nearby on parameters q and at:
+<body>
+  ...
+    <script>
+    ...
+      // Get an instance of the geocoding service:
+            var geocoder = platform.getSearchService();
 
-// Get an instance of the geocoding service:
-      var geocoder = platform.getSearchService();
-    
-      function geocodeAndSearch(){
+            function geocodeAndSearch(){
 
-          let geocoderParams = {
-              q: 'restaurant',
-              at : '-23.63,-46.68'
-          }
+                let geocoderParams = {
+                    q: 'restaurant',
+                    at : '-23.63,-46.68'
+                }
 
-          function onResult(result){
-            console.log(result);
-          }
+                function onResult(result){
+                  console.log(result);
+                }
 
-          geocoder.browse(geocoderParams,onResult,alert);
+                geocoder.browse(geocoderParams,onResult,alert);
 
-      }
+            }
 
-      geocodeAndSearch();
+            geocodeAndSearch();
+
+   </script>
+</body>
 
 Open the Browser Dev Console to see the list of restaurants it returned.
