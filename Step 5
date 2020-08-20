@@ -24,3 +24,4 @@ Let's use our coordinates and ask for 'restaurant' nearby on parameters q and at
 
       geocodeAndSearch();
 
+Open the Browser Dev Console to see the list of restaurants it returned.
