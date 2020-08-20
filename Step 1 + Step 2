@@ -1,0 +1,55 @@
+Step 1 - Generating your API keys
+https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/get-credentials-ols.html
+
+Access: https://her.is/latam
+Sign Up for a Free Developer Account (more info: https://developer.here.com/pricing)
+Create a project in Products > Freemium & Pro > Get Credentials
+
+Step 2 - Loading Maps
+https://developer.here.com/documentation/maps/3.1.14.0/dev_guide/topics/get-started.html
+
+Load the Maps API code libraries.
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WWC Bogota</title>
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
+      type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
+      type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
+      type="text/javascript" charset="utf-8"></script>
+    </head>   
+
+
+Initialize communication with HERE back-end services (to request map image tiles).
+
+<body>
+    <div style="width: 640px; height: 480px" id="mapContainer"></div>
+    <script>
+      // Initialize the platform object:
+      var platform = new H.service.Platform({
+        apikey: "YOUR_API_Key"
+      });
+      
+Initialize a map object, displaying the map
+
+ // Obtain the default map types from the platform object
+      var defaultLayers = platform.createDefaultLayers();
+
+      // Instantiate (and display) a map object:
+      var map = new H.Map(
+        document.getElementById('mapContainer'),
+        defaultLayers.vector.normal.map,
+        {
+          zoom: 10,
+          center: { lat: 52.5, lng: 13.4 }
+        });
+     </script>
+  </body>
+</html>
+
+Search for a location that you prefer: https://wego.here.com/
+
